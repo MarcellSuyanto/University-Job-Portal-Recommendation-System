@@ -6,7 +6,7 @@ import pandas as pd
 import sqlite3
 import json
 
-from get_data import getData
+from get_data import portal_login
 
 load_dotenv()
 user = os.getenv("UID")
@@ -20,7 +20,7 @@ password = os.getenv("PASSWORD")
 job_type = "Internship"
 
 
-getData(user, password, job_type)
+portal_login(user, password, job_type)
 
 yesterday = datetime.now() - timedelta(1)
 yesterday = datetime.strftime(yesterday, '%Y-%m-%d')

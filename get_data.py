@@ -3,7 +3,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-def getData(user, password, job_type):
+
+
+def portal_login(user, password, job_type):
     driver = webdriver.Chrome()
     driver.get("https://www.cedars.hku.hk/netjobs")
     main_page = driver.current_window_handle
@@ -55,3 +57,5 @@ def getData(user, password, job_type):
     time.sleep(1)
     internship_button = driver.find_element(By.XPATH, f"//a[text()='{job_type} (']")
     internship_button.click()
+
+
