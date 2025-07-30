@@ -7,8 +7,10 @@ import os
 import time
 from datetime import datetime, timedelta
 import pandas as pd
-import sqlite3
-import json
+import keybert
+from nltk.corpus import stopwords
+import re 
+
 
 load_dotenv()
 user = os.getenv("UID")
@@ -20,7 +22,6 @@ password = os.getenv("PASSWORD")
 # Temporary 
 # Summer
 job_type = "Internship"
-print(user, password)
 
 driver = webdriver.Chrome()
 driver.get("https://www.cedars.hku.hk/netjobs")
@@ -54,11 +55,9 @@ continue_button = WebDriverWait(driver, timeout=10).until(
 continue_button.click()
 #Stay Singed in page
 stay_button = WebDriverWait(driver, timeout=10).until(
-    EC.presence_of_element_located((By.XPATH, "//input[@type='submit' and @id='idSIButton9']"))
+    EC.visibility_of_element_located((By.XPATH, "//input[@type='submit' and @id='idSIButton9']"))
 )
 stay_button.click()
-
-
 
 check_box = WebDriverWait(driver, 10).until(
     EC.visibility_of_element_located((By.XPATH, "//input[@type='checkbox']"))
@@ -70,8 +69,18 @@ agree_btn = WebDriverWait(driver,10).until(
 agree_btn.click()
 
 time.sleep(1)
-internship_button = driver.find_element(By.XPATH, f"//a[text()='{job_type} (']")
-internship_button.click()
+
+job_type_button = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, f"//a[text()='{job_type} (']"))
+)
+job_type_button.click()
+
+time.sleep(1)
+
+job_type_button = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.XPATH, f"//a[text()='{job_type} (']"))
+)
+job_type_button.click()
 
 
 yesterday = datetime.now() - timedelta(1)
@@ -83,7 +92,6 @@ def clean_data(data):
     for i in range(len(data)):
         data[i] = data[i].split(':\n')
     return data
-        
 
 def get_data(driver):
     WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
@@ -112,52 +120,101 @@ for i, job in enumerate(jobs):
     details.append(data)
 
 driver.close()
-    
-
-
-def format_json(job):
-    job_json = {}   
-    for item in job:
-        if len(item) >= 2:  
-            key = item[0]
-            value = item[1]
-            job_json[key] = value
-    return json.dumps(job_json)  
 
 details[2]
 
-#Set up a connection
-conn = sqlite3.connect('jobs.db')
-cursor = conn.cursor()
-create_table_query = """
-CREATE TABLE IF NOT EXISTS jobs (
-    JobID TEXT PRIMARY KEY,
-    PostingDate TEXT,
-    EmploymentType TEXT,
-    EmplymentMode TEXT,
-    CompanyNameEng TEXT,
-    CompanyNameChi TEXT, 
-    NatureOfBusiness TEXT,
-    OriginOfCompanyOwnership TEXT,
-    NoOfEmployees TEXT,
-    PositionOffered TEXT,
-    NoOfVacancies TEXT,
-    JobNature TEXT,
-    JobDescription TEXT,
-    BasicSalary TEXT,
-    WorkLocatin TEXT, 
-    WorkMode TEXT,
-    FieldsOfStudyRequired TEXT,
-    LevelOfAward TEXT,
-    NoOfWorkingHoursPerDay INTEGER,
-    NoOfWorkingHoursPerWeek INTEGER,
-    ClosingDataForApplication TEXT,
-    ApplicationShouldBeSubmittedVia TEXT,
-    ApplicationDocumentsRequired TEXT
-);
+job_details = dict()
+for job in details:
+    for detail in job:
+        if detail[0] not in job_details:
+            job_details[detail[0]] = 1
+        else:
+            job_details[detail[0]] += 1
+
+job_details
+
+
+jobs_data = []
+for job in details:
+    jobs_dict = dict()
+    for detail in job:
+        if len(detail) == 2: 
+            jobs_dict[detail[0]] = detail[1]
+        elif len(detail) > 2:  
+            jobs_dict[detail[0]] = ' '.join(detail[1:])
+        elif len(detail) == 1:
+            if detail[0] not in jobs_dict:
+                jobs_dict[detail[0]] = 1
+            else:
+                jobs_dict[detail[0]] += 1
+    jobs_data.append(jobs_dict)
+jobs_df = pd.DataFrame(jobs_data)
+
+# jobs_df.to_json("data.json", orient="records", indent=4)
+
+jobs_df.columns
+
+print(jobs_df['Job Description'].iloc[19])
+
+"""
+About Us
+Role Overview / Job Responsibilities / Job Overview / Job Duties / What we offer / Job Description / Key Responsibilities
+Key Responsibilities
+Requirements/Qualifications
 """
 
-cursor.execute(create_table_query)
+def clean_desc(desc):
+    desc = re.split(r'', desc)
+    return desc
+
+def get_tags(input_df:pd.DataFrame, model:keybert) -> list:
+    tags = []
+    job_nature = input_df['Job Nature'].replace('/', ' ') 
+    job_desc = clean_desc(input_df['Job Description'])
+    pos_offered = input_df['Position Offered'] 
+    nature_of_business = input_df['Nature of Business'] 
+
+    tags.append(model.extract_keywords(job_desc, stop_words=stopwords.words('english')))
+    return tags
+
+model = keybert.KeyBERT()
+
+input_data = jobs_df[['Job ID', 'Job Nature', 'Job Description', 'Position Offered', 'Nature of Business']]
+print(input_data.iloc[1]['Job Description'])
+print(get_tags(input_data.iloc[1], model))
+
+#Set up a connection
+# conn = sqlite3.connect('jobs.db')
+# cursor = conn.cursor()
+# create_table_query = """
+# CREATE TABLE IF NOT EXISTS jobs (
+#     JobID TEXT PRIMARY KEY,
+#     PostingDate TEXT,
+#     EmploymentType TEXT,
+#     EmplymentMode TEXT,
+#     CompanyNameEng TEXT,
+#     CompanyNameChi TEXT, 
+#     NatureOfBusiness TEXT,
+#     OriginOfCompanyOwnership TEXT,
+#     NoOfEmployees TEXT,
+#     PositionOffered TEXT,
+#     NoOfVacancies TEXT,
+#     JobNature TEXT,
+#     JobDescription TEXT,
+#     BasicSalary TEXT,
+#     WorkLocatin TEXT, 
+#     WorkMode TEXT,
+#     FieldsOfStudyRequired TEXT,
+#     LevelOfAward TEXT,
+#     NoOfWorkingHoursPerDay INTEGER,
+#     NoOfWorkingHoursPerWeek INTEGER,
+#     ClosingDataForApplication TEXT,
+#     ApplicationShouldBeSubmittedVia TEXT,
+#     ApplicationDocumentsRequired TEXT
+# );
+# """
+
+# cursor.execute(create_table_query)
 
 
 
