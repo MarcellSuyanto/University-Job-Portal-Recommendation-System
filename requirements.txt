@@ -2,3 +2,6 @@ pandas
 selenium
 dotenv
 nltk
+keybert
+transformers
+re
