@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-
+import pandas as pd
 
 def initialize_driver():
     options = Options()
@@ -99,7 +99,25 @@ def get_jobs(driver):
         details.append(data)
 
     driver.close()
+    jobs_data = []
+    for job in details:
+        jobs_dict = dict()
+        for detail in job:
+            if len(detail) == 2: 
+                jobs_dict[detail[0]] = detail[1]
+            elif len(detail) > 2:  
+                jobs_dict[detail[0]] = ' '.join(detail[1:])
+            elif len(detail) == 1:
+                if detail[0] not in jobs_dict:
+                    jobs_dict[detail[0]] = 1
+                else:
+                    jobs_dict[detail[0]] += 1
+        jobs_data.append(jobs_dict)
+    jobs_df = pd.DataFrame(jobs_data)
     
+    jobs_df.to_csv("jobs_data.csv", index=False)
+    return jobs_df
+        
         
 
 
