@@ -1,4 +1,4 @@
-# University Job Portal Recommendation System
+# (In-Progress)University Job Portal Recommendation System
 This project is specifically built for University of Hong Kong(HKU)'s Student Job Portal NETJOBS. All rights and property reserved by CEDARS and HKU.
 
 ## How it Works
