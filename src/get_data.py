@@ -82,6 +82,7 @@ def get_data(driver):
         driver.switch_to.window(main_page)
         return data
 
+
 def get_jobs(driver):  
     def clean_data(data):
         # data: list of strings corresponding to job details
