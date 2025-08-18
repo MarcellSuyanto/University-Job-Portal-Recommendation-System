@@ -1,15 +1,21 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
 
-def portal_login(user, password, job_type):
-    driver = webdriver.Chrome()
+def initialize_driver():
+    options = Options()
+    #options.add_argument("--headless")
+    driver = webdriver.Chrome(options=options)
     driver.get("https://www.cedars.hku.hk/netjobs")
-    main_page = driver.current_window_handle
+    return driver
 
+
+
+def portal_login(driver, user, password, job_type):
     # Click on Student Login
     student_login = driver.find_element(By.XPATH, "//a[text()='HKU Student']")
     student_login.click()
@@ -43,8 +49,6 @@ def portal_login(user, password, job_type):
     )
     stay_button.click()
 
-
-
     check_box = WebDriverWait(driver, 10).until(
         EC.visibility_of_element_located((By.XPATH, "//input[@type='checkbox']"))
     )
@@ -58,7 +62,9 @@ def portal_login(user, password, job_type):
     internship_button = driver.find_element(By.XPATH, f"//a[text()='{job_type} (']")
     internship_button.click()
 
-    def get_data(driver):
+
+def get_data(driver):
+        main_page = driver.current_window_handle
         WebDriverWait(driver, 10).until(EC.number_of_windows_to_be(2))
 
         for window_handle in driver.window_handles:
@@ -75,7 +81,8 @@ def portal_login(user, password, job_type):
         driver.close()
         driver.switch_to.window(main_page)
         return data
-    
+
+def get_jobs(driver):  
     def clean_data(data):
         # data: list of strings corresponding to job details
         for i in range(len(data)):

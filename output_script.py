@@ -154,6 +154,8 @@ jobs_df = pd.DataFrame(jobs_data)
 
 jobs_df.columns
 
+jobs_df.to_csv("jobs_data.csv", index=False)
+
 print(jobs_df['Job Description'].iloc[19])
 
 """
@@ -170,7 +172,8 @@ def clean_desc(desc):
 def get_tags(input_df:pd.DataFrame, model:keybert) -> list:
     tags = []
     job_nature = input_df['Job Nature'].replace('/', ' ') 
-    job_desc = clean_desc(input_df['Job Description'])
+    #job_desc = clean_desc(input_df['Job Description'])
+    job_desc = input_df['Job Description']
     pos_offered = input_df['Position Offered'] 
     nature_of_business = input_df['Nature of Business'] 
 
