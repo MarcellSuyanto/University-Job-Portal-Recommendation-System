@@ -2,11 +2,21 @@
 #from nltk.corpus import stopwords
 from get_data import *
 import re
+import spacy
 
 #model = keybert.KeyBERT()
-def clean_desc(desc):
-    desc = re.split(r'', desc)
-    return desc
+nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
+
+def clean_job_description(text):
+    text = re.sub(r'https?://\S+|www\.\S+', '', text)
+    text = re.sub(r'[^a-zA-Z\s]', '', text)
+    text = text.lower()
+    doc = nlp(text)
+    cleaned_tokens = []
+    for token in doc:
+        if not token.is_stop and token.text.strip():
+            cleaned_tokens.append(token.lemma_)
+    return " ".join(cleaned_tokens)
 
 def get_tags(input_df:pd.DataFrame) -> list:
     tags = []

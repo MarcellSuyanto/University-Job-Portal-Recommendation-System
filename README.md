@@ -12,8 +12,8 @@ Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-<strong>IMPORTANT<strong>
-Set up an .env file using the provided format in the given .env file
+<strong>IMPORTANT<strong>  
+Set up an .env file using the provided format in the given .env file  
 
 If you want to get the freshest jobs, run:
 ```bash

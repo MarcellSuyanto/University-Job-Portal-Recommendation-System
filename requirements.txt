@@ -4,4 +4,4 @@ dotenv
 nltk
 keybert
 transformers
-re
+spacy
