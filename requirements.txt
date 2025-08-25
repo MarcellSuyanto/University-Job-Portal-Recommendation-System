@@ -2,6 +2,8 @@ pandas
 selenium
 dotenv
 nltk
+blis --prefer-binary
 keybert
 transformers
 spacy
+sentence_transformers
