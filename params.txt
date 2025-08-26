@@ -1,5 +1,0 @@
-Output Format: JSON
-# Excel, CSV, JSON
-Job Type: Internship
-# Internship, Graduate, Part-time, Full-time
-
