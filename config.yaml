@@ -1,0 +1,9 @@
+user:
+  job_interest: Data Scientist
+  skills: Python, Data Science, Programming
+
+job_type: Internship
+# Internship, Graduate, Temporary, Summer
+
+output_format: Excel
+# Excel, CSV, JSON
