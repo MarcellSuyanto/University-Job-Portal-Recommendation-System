@@ -5,9 +5,8 @@ import os
 import pandas as pd
 from dotenv import load_dotenv
 
-load_dotenv()
-
 def get_env():
+    load_dotenv()
     user = os.getenv("UID")
     password = os.getenv("PASSWORD")
     return user, password
@@ -26,17 +25,10 @@ recom.py
 
 """
 
-
-
 def main():
     user, password = get_env()
-    
-    #JOB TYPE: 
-    # Graduate 
-    # Internsip 
-    # Temporary 
-    # Summer
-    job_type = "Internship"
+    config = get_config()
+    job_type = config['job_type']
 
     driver = initialize_driver()
     portal_login(driver, user, password, job_type)
