@@ -1,12 +1,12 @@
-#import keybert
-#from nltk.corpus import stopwords
-#from get_data import *
+import yaml
+from get_data import *
 import re
 import spacy
 from sentence_transformers import SentenceTransformer
-print("hello")
+
 nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
 model_to_use = SentenceTransformer("all-MiniLM-L6-v2")
+config = get_config()
 
 def clean_job_description(text):
     text = re.sub(r'<.*?>', '', text)
@@ -34,9 +34,6 @@ Event Coordination:Organize and execute marketing events, webinars, and campaign
  Creative thinker with a strong sense of aesthetics and strategic messaging.
  Prior experience in B2B marketing or working with startups is a bonus.
 """
-
-# Clean the description using our function
-
 
 def process_input(job_title, job_desc, job_nature):
     cleaned_desc = clean_job_description(job_desc)
