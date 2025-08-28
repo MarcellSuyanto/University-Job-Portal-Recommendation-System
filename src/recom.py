@@ -1,10 +1,10 @@
-import yaml
 from get_data import get_config
 import re
 import spacy
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
+import heapq
 
 
 MODEL = "all-MiniLM-L6-v2"
@@ -67,4 +67,12 @@ job_embeddings = process_jobs(pd.read_excel("data/jobs_data.xlsx"))
 user_embeddings = process_input("Marketing Associate", ["marketing", "communication", "design"], "Marketing/Finance/Business")
 
 k = 5
-top_k = sorted(job_embeddings.items(), key=lambda x: compare_embeddings(x[1], user_embeddings), reverse=True)[:k]
+scored_jobs = []
+for job_id, embedding in job_embeddings.items():
+    similarity = compare_embeddings(embedding, user_embeddings)
+    scored_jobs.append((job_id, similarity))
+
+top_k = heapq.nlargest(k, scored_jobs, key=lambda x: x[1])
+print("Top K job recommendations:")
+for job_id, score in top_k:
+    print(f"Job ID: {job_id}, Similarity Score: {score}")
