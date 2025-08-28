@@ -1,5 +1,4 @@
 from src.get_data import *
-from src.recom import *
 
 import os
 import pandas as pd
@@ -11,6 +10,10 @@ def get_env():
     password = os.getenv("PASSWORD")
     return user, password
 
+def get_config():
+    with open('config.yaml', 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 """
 get_data.py
 
@@ -32,7 +35,7 @@ def main():
 
     driver = initialize_driver()
     portal_login(driver, user, password, job_type)
-    jobs = get_jobs(driver)
+    jobs = get_jobs(driver, config)
 
 if __name__ == "__main__":
     main()

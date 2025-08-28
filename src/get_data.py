@@ -6,9 +6,11 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import pandas as pd
 import yaml
+import os
 
 def initialize_driver() -> webdriver:
     options = Options()
+    options.add_argument('--log-level=3')
     #options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     driver.get("https://www.cedars.hku.hk/netjobs")
@@ -80,21 +82,16 @@ def get_data(driver):
     driver.switch_to.window(main_page)
     return data
 
-def get_config():
-    with open('../config.yaml', 'r') as file:
-        config = yaml.safe_load(file)
-    return config
-
 def output_to_csv(df:pd.DataFrame):
-    df.to_csv("jobs_data.csv", index=False)
+    df.to_csv("data/jobs_data.csv", index=False)
 
 def output_to_xlsx(df:pd.DataFrame):
-    df.to_excel("jobs_data.xlsx", index=False)
+    df.to_excel("data/jobs_data.xlsx", index=False)
 
 def output_to_json(df:pd.DataFrame):
-    df.to_json("jobs_data.json", index=False)
+    df.to_json("data/jobs_data.json", index=False)
 
-def get_jobs(driver):  
+def get_jobs(driver, config):  
     def clean_data(data):
         # data: list of strings corresponding to job details
         for i in range(len(data)):
@@ -127,7 +124,6 @@ def get_jobs(driver):
     
     jobs_df = pd.DataFrame(jobs_data)
 
-    config = get_config()
     output_format = config['output_format']
     match output_format:
         case 'Excel':
@@ -139,6 +135,7 @@ def get_jobs(driver):
 
     
     return jobs_df
+
         
         
 
