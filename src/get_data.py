@@ -81,7 +81,7 @@ def get_data(driver):
     return data
 
 def get_config():
-    with open('config.yaml', 'r') as file:
+    with open('../config.yaml', 'r') as file:
         config = yaml.safe_load(file)
     return config
 
