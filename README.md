@@ -1,5 +1,5 @@
 # (In-Progress)University Job Portal Recommendation System
-This project is specifically built for University of Hong Kong(HKU)'s Student Job Portal NETJOBS. All rights and property reserved by CEDARS and HKU.
+This project is specifically built for University of Hong Kong(HKU)'s Student Job Portal NETJOBS, exclusive to students studying/studied at HKU, with access to HKU CEDARS NERTJOBS site. All rights and property reserved by CEDARS and HKU.
 
 ## How it Works
 
@@ -19,3 +19,8 @@ If you want to get the freshest jobs, run:
 ```bash
 python src/get_data.py params.txt
 ```
+
+TODO
+1. Finish up Similarity Search Feature
+2. Set up vector database
+3. Optimize scraping feature and edge cases(Connectivity time, invalid inputs, etc.)
