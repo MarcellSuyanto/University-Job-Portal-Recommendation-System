@@ -12,7 +12,7 @@ Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-<strong>IMPORTANT<strong>  
+<strong>IMPORTANT</strong>  
 Set up an .env file with the following variables:  
 UID = "Your HKU email(abc@connect.hku.hk)"  
 PASSWORD = "Your HKU Password"  
