@@ -1,9 +1,12 @@
+# Configuration for get_data.py
+scrape_data: False # Get newest jobs
+job_type: Internship # Internship, Graduate, Temporary, Summer
+output_format: Excel # Excel, CSV, JSON
+
+
+# Configuration for recom.py
 user:
   job_interest: Data Scientist
   skills: Python, Data Science, Programming
-
-job_type: Internship
-# Internship, Graduate, Temporary, Summer
-
-output_format: Excel
-# Excel, CSV, JSON
+  industry: IT, AI, Tech
+top_k: 5
