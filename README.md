@@ -26,20 +26,15 @@ python -m spacy download en_core_web_sm
 ```
 
 
-If you want to get the freshest jobs, run:
-```bash
-cd src
-python get_data.py 
-```
+If you want to get the freshest jobs set ```scrape_data``` in ```data/config.yaml``` to ```True```
 
 To run the recommendation system:
 ```bash
-cd src
-python recom.py
+python main.py
 ```
 
 TODO
 1. Finish up Similarity Search Feature
 2. Set up vector database
 3. Optimize scraping feature and edge cases(Connectivity time, invalid inputs, etc.)
-4. Multi-page job scraping
+4. Multi-page job scraping, optimizer scraping (with batch processing?)
