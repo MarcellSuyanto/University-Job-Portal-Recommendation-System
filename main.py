@@ -3,8 +3,9 @@ from src.recom import get_recommendations
 from data.read_data import get_df
 
 import os
-import pandas as pd
+import argparse
 from dotenv import load_dotenv
+import yaml
 
 def get_env():
     load_dotenv()
@@ -34,9 +35,14 @@ def main():
     user, password = get_env()
     config = get_config()
 
-    if config['scrape_data']:
+    parser = argparse.ArgumentParser(description='Job Recommendation System')
+    parser.add_argument('--get_data', action='store_true', help='Fetch new job data')
+    args = parser.parse_args()
+
+    if args.get_data:
+        print("Scraping data")
         job_type = config['job_type']
-        driver = initialize_driver()
+        driver = initialize_driver(headless=config['headless'])
         portal_login(driver, user, password, job_type)
         jobs = get_jobs(driver, config) #jobs:
 
@@ -47,7 +53,7 @@ def main():
         jobs = get_df("json")
     elif os.path.exists("data/jobs_data.csv"):
         jobs = get_df("csv")
-    recommendations, titles = get_recommendations(jobs, config['user_profile'], config['top_k'])
+    recommendations, titles = get_recommendations(jobs, config['user'], config['top_k'])
     print("Top K job recommendations:")
     for job_id, score in recommendations:
         print(f"Job ID: {job_id}, Position: {titles[job_id]}, Similarity Score: {score}")

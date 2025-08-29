@@ -46,10 +46,10 @@ def process_jobs(df:pd.DataFrame):
     return embeddings
 
 def process_input(job_title, skills, industry):
-    input_text = "Position: " + job_title + ". Skills: " + ", ".join(skills) + ". Industry: " + industry
+    input_text = "Position: " + job_title + ". Skills: " + skills + ". Industry: " + industry
     print("================================")
     print(f"Position: {job_title}")
-    print(f"Skills: {', '.join(skills)}")
+    print(f"Skills: {skills}")
     print(f"Industry: {industry}")
     embeddings = model_to_use.encode(input_text)
     return embeddings
@@ -60,8 +60,11 @@ def compare_embeddings(embeddings1, embeddings2):
 
 def get_recommendations(df, user_profile, k):
     job_embeddings = process_jobs(df)
-    ######
-    user_title, user_skills, user_industry = user_profile
+    user_title, user_skills, user_industry = (
+        user_profile['job_interest'],
+        user_profile['skills'],
+        user_profile['industry']
+    )
     user_embeddings = process_input(user_title, user_skills, user_industry)
 
     titles = dict(zip(df['Job ID'], df['Position Offered']))

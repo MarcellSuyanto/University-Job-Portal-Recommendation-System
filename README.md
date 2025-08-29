@@ -33,8 +33,10 @@ To run the recommendation system:
 python main.py
 ```
 
+
 TODO
 1. Finish up Similarity Search Feature
 2. Set up vector database
 3. Optimize scraping feature and edge cases(Connectivity time, invalid inputs, etc.)
 4. Multi-page job scraping, optimizer scraping (with batch processing?)
+5. Front-end

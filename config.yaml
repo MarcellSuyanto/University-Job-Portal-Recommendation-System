@@ -1,6 +1,6 @@
 # Configuration for get_data.py
-scrape_data: False # Get newest jobs
 job_type: Internship # Internship, Graduate, Temporary, Summer
+headless: False
 output_format: Excel # Excel, CSV, JSON
 
 

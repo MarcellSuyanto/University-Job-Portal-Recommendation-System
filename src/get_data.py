@@ -5,13 +5,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 import pandas as pd
-import yaml
-import os
 
-def initialize_driver() -> webdriver:
+def initialize_driver(headless) -> webdriver:
     options = Options()
     options.add_argument('--log-level=3')
-    #options.add_argument("--headless")
+    if headless:
+        options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     driver.get("https://www.cedars.hku.hk/netjobs")
     return driver
