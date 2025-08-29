@@ -1,19 +1,18 @@
-from get_data import get_config
 import re
 import spacy
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import heapq
+from read_data import get_df
 
 
-MODEL = "all-MiniLM-L6-v2"
+MODEL = "all-MiniLM-L6-v2" # all-mpnet-base-v2, best quality # all-MiniLM-l6-v2, fast and good quality
 print(f"Model in use: {MODEL}")
 print("Setting up model and configuration...")
 
 nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
-model_to_use = SentenceTransformer(MODEL) # all-mpnet-base-v2, best quality # all-MiniLM-l6-v2, fast and good quality
-config = get_config()
+model_to_use = SentenceTransformer(MODEL) 
 print(f"Model and configuration loaded")
 
 
@@ -58,15 +57,14 @@ def process_input(job_title, skills, industry):
 
 
 def compare_embeddings(embeddings1, embeddings2):
-    print(f"Comparing embeddings...")
     return cosine_similarity([embeddings1], [embeddings2])[0][0]
 
-# job_embeddings = process_job("Deep Learning Intern", raw_description, "IT/Programming")
-# user_embeddings = process_input("Marketing Associate", ["marketing", "communication", "design"], "Marketing/Finance/Business")
 job_embeddings = process_jobs(pd.read_excel("data/jobs_data.xlsx"))
-user_embeddings = process_input("Marketing Associate", ["marketing", "communication", "design"], "Marketing/Finance/Business")
+user_embeddings = process_input("Audit", ["Audit", "assurance", "research"], "Audit/Finance/Business")
 
 k = 5
+df = get_df("excel")
+titles = dict(zip(df['Job ID'], df['Position Offered']))
 scored_jobs = []
 for job_id, embedding in job_embeddings.items():
     similarity = compare_embeddings(embedding, user_embeddings)
@@ -75,4 +73,4 @@ for job_id, embedding in job_embeddings.items():
 top_k = heapq.nlargest(k, scored_jobs, key=lambda x: x[1])
 print("Top K job recommendations:")
 for job_id, score in top_k:
-    print(f"Job ID: {job_id}, Similarity Score: {score}")
+    print(f"Job ID: {job_id}, Position: {titles[job_id]}, Similarity Score: {score}")
