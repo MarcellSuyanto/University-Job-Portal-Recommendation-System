@@ -4,7 +4,6 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import heapq
-from read_data import get_df
 
 
 MODEL = "all-MiniLM-L6-v2" # all-mpnet-base-v2, best quality # all-MiniLM-l6-v2, fast and good quality
@@ -59,18 +58,17 @@ def process_input(job_title, skills, industry):
 def compare_embeddings(embeddings1, embeddings2):
     return cosine_similarity([embeddings1], [embeddings2])[0][0]
 
-job_embeddings = process_jobs(pd.read_excel("data/jobs_data.xlsx"))
-user_embeddings = process_input("Audit", ["Audit", "assurance", "research"], "Audit/Finance/Business")
+def get_recommendations(df, user_profile, k):
+    job_embeddings = process_jobs(df)
+    ######
+    user_title, user_skills, user_industry = user_profile
+    user_embeddings = process_input(user_title, user_skills, user_industry)
 
-k = 5
-df = get_df("excel")
-titles = dict(zip(df['Job ID'], df['Position Offered']))
-scored_jobs = []
-for job_id, embedding in job_embeddings.items():
-    similarity = compare_embeddings(embedding, user_embeddings)
-    scored_jobs.append((job_id, similarity))
+    titles = dict(zip(df['Job ID'], df['Position Offered']))
+    scored_jobs = []
+    for job_id, embedding in job_embeddings.items():
+        similarity = compare_embeddings(embedding, user_embeddings)
+        scored_jobs.append((job_id, similarity))
 
-top_k = heapq.nlargest(k, scored_jobs, key=lambda x: x[1])
-print("Top K job recommendations:")
-for job_id, score in top_k:
-    print(f"Job ID: {job_id}, Position: {titles[job_id]}, Similarity Score: {score}")
+    top_k = heapq.nlargest(k, scored_jobs, key=lambda x: x[1])
+    return (top_k, titles)
