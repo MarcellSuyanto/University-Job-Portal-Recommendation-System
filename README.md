@@ -1,17 +1,7 @@
 # University Job Portal Recommendation System
 This project is specifically built for University of Hong Kong(HKU)'s Student Job Portal NETJOBS, exclusive to students studying/studied at HKU, with access to HKU CEDARS NERTJOBS site. All rights and property reserved by CEDARS and HKU.
 
-## How it Works
-
-1. Getting the Data
-
-2. Creating the Recommendation System
-
 ## How to Run
-Install dependencies
-```bash
-pip install -r requirements.txt
-```
 <strong>IMPORTANT</strong>  
 Set up an .env file with the following variables:  
 UID = "Your HKU email(abc@connect.hku.hk)"  
@@ -26,9 +16,12 @@ python -m spacy download en_core_web_sm
 ```
 
 
-If you want to get the freshest jobs set ```scrape_data``` in ```data/config.yaml``` to ```True```
+If you want to get the freshest jobs and run the recommendation system, run:
+```bash
+python main.py --get_data
+```
 
-To run the recommendation system:
+To run the recommendation system on its own:
 ```bash
 python main.py
 ```
