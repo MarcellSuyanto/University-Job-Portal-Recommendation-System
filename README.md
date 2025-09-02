@@ -4,8 +4,10 @@ This project is specifically built for University of Hong Kong(HKU)'s Student Jo
 ## How to Run
 <strong>IMPORTANT</strong>  
 Set up an .env file with the following variables:  
+```bash
 UID = "Your HKU email(abc@connect.hku.hk)"  
 PASSWORD = "Your HKU Password"  
+```
 
 Set up desired configurations in ```config.yaml```  
 
