@@ -5,15 +5,13 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pandas as pd
 import heapq
 
-
 MODEL = "all-MiniLM-L6-v2" # all-mpnet-base-v2, best quality # all-MiniLM-l6-v2, fast and good quality
-print(f"Model in use: {MODEL}")
-print("Setting up model and configuration...")
-
 nlp = spacy.load("en_core_web_sm", disable=["parser", "ner"])
 model_to_use = SentenceTransformer(MODEL) 
-print(f"Model and configuration loaded")
 
+def set_up(MODEL):
+    global nlp, model_to_use
+    print(f"Model in use: {MODEL}")
 
 def clean_job_description(text):
     text = re.sub(r'<.*?>', '', text)

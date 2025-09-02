@@ -38,14 +38,20 @@ def main():
     parser = argparse.ArgumentParser(description='Job Recommendation System')
     parser.add_argument('--get_data', action='store_true', help='Fetch new job data')
     args = parser.parse_args()
-
     if args.get_data:
         print("Scraping data")
         job_type = config['job_type']
         driver = initialize_driver(headless=config['headless'])
-        portal_login(driver, user, password, job_type)
-        jobs = get_jobs(driver, config) #jobs:
-
+        portal = portal_login(driver, user, password, job_type)
+        match portal:
+            case "Successful Login":
+                jobs = get_jobs(driver, config) #jobs:
+            case "Password Error":
+                print("Login failed")
+                return
+            case "Username Error":
+                print("Login failed")
+                return
     # Get dataframe 
     if os.path.exists("data/jobs_data.xlsx"):
         jobs = get_df("excel")

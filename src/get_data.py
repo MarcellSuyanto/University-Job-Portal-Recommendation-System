@@ -15,8 +15,25 @@ def initialize_driver(headless) -> webdriver:
     driver.get("https://www.cedars.hku.hk/netjobs")
     return driver
 
+
+
 def portal_login(driver, user:str, password:str, job_type:str) -> None:
     # Click on Student Login
+
+    def password_error():
+        error_message = driver.find_elements(By.XPATH, "//span[@id='errorText']")
+        if error_message:
+            print("Password error")
+            return True
+        return False
+    
+    def username_error():
+        error_message = driver.find_elements(By.XPATH, "//div[@class='error-msg']")
+        if error_message:
+            print("Username error")
+            return True
+        return False
+
     student_login = driver.find_element(By.XPATH, "//a[text()='HKU Student']")
     student_login.click()
 
@@ -29,6 +46,10 @@ def portal_login(driver, user:str, password:str, job_type:str) -> None:
     email_input.send_keys(user)
     login_button.click()
 
+    if username_error():
+        driver.close()
+        return "Username Error"
+
     #Input password
     password_input = WebDriverWait(driver, timeout=10).until(
         EC.presence_of_element_located((By.ID, "passwordInput"))
@@ -36,6 +57,10 @@ def portal_login(driver, user:str, password:str, job_type:str) -> None:
     sign_in_button = driver.find_element(By.ID, "submitButton")
     password_input.send_keys(password)
     sign_in_button.click()
+
+    if password_error():
+        driver.close()
+        return "Password Error"
 
     #Trust Page
     continue_button = WebDriverWait(driver, timeout=10).until(
@@ -61,6 +86,8 @@ def portal_login(driver, user:str, password:str, job_type:str) -> None:
     time.sleep(1)
     job_type_button = driver.find_element(By.XPATH, f"//a[text()='{job_type} (']")
     job_type_button.click()
+
+    return "Successful Login"
 
 def get_data(driver):
     main_page = driver.current_window_handle
