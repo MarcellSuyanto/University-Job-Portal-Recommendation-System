@@ -6,7 +6,7 @@ output_format: Excel # Excel, CSV, JSON
 
 # Configuration for recom.py
 user:
-  job_interest: Teacher
-  skills: STEM, Teaching, Syllabus
-  industry: Teaching, Education
+  job_interest: Video Content Creator
+  skills:  Marketing, Content Creation, Social Media
+  industry: 'Art, Design, Culture'
 top_k: 5

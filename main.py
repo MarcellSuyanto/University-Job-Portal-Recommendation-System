@@ -17,19 +17,6 @@ def get_config():
     with open('config.yaml', 'r') as file:
         config = yaml.safe_load(file)
     return config
-"""
-get_data.py
-
-- initialize_driver()
-- portal_login(driver, user, password, job_type)
-- get_data(driver)
-- get_jobs(driver)
-"""
-
-"""
-recom.py
-
-"""
 
 def main():
     user, password = get_env()

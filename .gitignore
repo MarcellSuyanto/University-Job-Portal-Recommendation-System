@@ -2,8 +2,7 @@
 /venv
 /__pycache__
 *.db
+*.ipynb
 jobs_data.xlsx
-src/__pycache__/get_data.cpython-311.pyc
-src/__pycache__/__init__.cpython-311.pyc
-src/__pycache__/recom.cpython-311.pyc
-data/__pycache__/read_data.cpython-311.pyc
+src/__pycache__
+data/__pycache__
