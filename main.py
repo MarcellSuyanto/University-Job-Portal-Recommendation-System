@@ -41,6 +41,7 @@ def main():
                 jobs = get_jobs(driver, config)
                 print("Updating Vector Database...")
                 update_vector_db(jobs)
+                print("Data scraping and vector database update complete.")
             case "Password Error":
                 print("Login failed: Invalid password")
                 return

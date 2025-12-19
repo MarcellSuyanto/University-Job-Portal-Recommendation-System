@@ -6,4 +6,4 @@
 jobs_data.xlsx
 /src/__pycache__
 /data/__pycache__
-/data/chromadb
+/data/chroma_db
