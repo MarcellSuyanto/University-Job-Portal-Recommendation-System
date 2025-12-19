@@ -24,6 +24,7 @@ def portal_login(driver, user:str, password:str, job_type:str) -> None:
         error_message = driver.find_elements(By.XPATH, "//span[@id='errorText']")
         if error_message:
             print("Password error")
+            driver.close()
             return True
         return False
     
@@ -31,63 +32,69 @@ def portal_login(driver, user:str, password:str, job_type:str) -> None:
         error_message = driver.find_elements(By.XPATH, "//div[@class='error-msg']")
         if error_message:
             print("Username error")
+            driver.close()
             return True
         return False
 
-    student_login = driver.find_element(By.XPATH, "//a[text()='HKU Student']")
-    student_login.click()
+    try:
+        student_login = driver.find_element(By.XPATH, "//a[text()='HKU Student']")
+        student_login.click()
 
-    #Input email and log in
-    email_input = WebDriverWait(driver, timeout=10).until(
-        EC.presence_of_element_located((By.ID, "email"))
-    )
-    login_button = driver.find_element(By.ID, "login_btn")
+        #Input email and log in
+        email_input = WebDriverWait(driver, timeout=10).until(
+            EC.presence_of_element_located((By.ID, "email"))
+        )
+        login_button = driver.find_element(By.ID, "login_btn")
 
-    email_input.send_keys(user)
-    login_button.click()
+        email_input.send_keys(user)
+        login_button.click()
 
-    if username_error():
+        if username_error():
+            driver.close()
+            return "Username Error"
+
+        #Input password
+        password_input = WebDriverWait(driver, timeout=10).until(
+            EC.presence_of_element_located((By.ID, "passwordInput"))
+        )
+        sign_in_button = driver.find_element(By.ID, "submitButton")
+        password_input.send_keys(password)
+        sign_in_button.click()
+
+        if password_error():
+            driver.close()
+            return "Password Error"
+
+        #Trust Page
+        continue_button = WebDriverWait(driver, timeout=10).until(
+            EC.presence_of_element_located((By.ID, "idSIButton9"))
+        )
+        continue_button.click()
+        time.sleep(3)
+        #Stay Singed in page
+        stay_button = WebDriverWait(driver, timeout=10).until(
+            EC.presence_of_element_located((By.XPATH, "//input[@type='submit' and @id='idSIButton9']"))
+        )
+        stay_button.click()
+
+        check_box = WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located((By.XPATH, "//input[@type='checkbox']"))
+        )
+        check_box.click()
+        agree_btn = WebDriverWait(driver,10).until(
+            EC.element_to_be_clickable((By.ID, "btn-agree"))
+        )
+        agree_btn.click()
+
+        time.sleep(1)
+        job_type_button = driver.find_element(By.XPATH, f"//a[text()='{job_type} (']")
+        job_type_button.click()
+
+        return "Successful Login"
+    except Exception as e:
+        print(f"An error occurred during login: {e}")
         driver.close()
-        return "Username Error"
-
-    #Input password
-    password_input = WebDriverWait(driver, timeout=10).until(
-        EC.presence_of_element_located((By.ID, "passwordInput"))
-    )
-    sign_in_button = driver.find_element(By.ID, "submitButton")
-    password_input.send_keys(password)
-    sign_in_button.click()
-
-    if password_error():
-        driver.close()
-        return "Password Error"
-
-    #Trust Page
-    continue_button = WebDriverWait(driver, timeout=10).until(
-        EC.presence_of_element_located((By.ID, "idSIButton9"))
-    )
-    continue_button.click()
-    time.sleep(3)
-    #Stay Singed in page
-    stay_button = WebDriverWait(driver, timeout=10).until(
-        EC.presence_of_element_located((By.XPATH, "//input[@type='submit' and @id='idSIButton9']"))
-    )
-    stay_button.click()
-
-    check_box = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.XPATH, "//input[@type='checkbox']"))
-    )
-    check_box.click()
-    agree_btn = WebDriverWait(driver,10).until(
-        EC.element_to_be_clickable((By.ID, "btn-agree"))
-    )
-    agree_btn.click()
-
-    time.sleep(1)
-    job_type_button = driver.find_element(By.XPATH, f"//a[text()='{job_type} (']")
-    job_type_button.click()
-
-    return "Successful Login"
+        return "Login Failed"
 
 def get_data(driver):
     main_page = driver.current_window_handle

@@ -166,3 +166,8 @@ wrapt==1.17.3
 
 wsproto==1.2.0
 
+
+chromadb
+langchain
+langchain-community
+langchain-huggingface

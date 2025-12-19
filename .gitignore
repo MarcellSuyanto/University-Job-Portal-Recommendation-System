@@ -4,5 +4,5 @@
 *.db
 *.ipynb
 jobs_data.xlsx
-src/__pycache__
-data/__pycache__
+/src/__pycache__
+/data/__pycache__
